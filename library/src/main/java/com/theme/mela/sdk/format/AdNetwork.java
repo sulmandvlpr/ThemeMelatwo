@@ -9,8 +9,7 @@ import static com.theme.mela.sdk.util.Constant.AD_STATUS_ON;
 import static com.theme.mela.sdk.util.Constant.APPLOVIN;
 import static com.theme.mela.sdk.util.Constant.MOPUB;
 import static com.theme.mela.sdk.util.Constant.NONE;
-import static com.theme.mela.sdk.util.Constant.STARTAPP;
-import static com.theme.mela.sdk.util.Constant.UNITY;
+
 
 import android.app.Activity;
 import android.util.Log;
@@ -25,10 +24,7 @@ import com.mopub.common.SdkConfiguration;
 import com.mopub.common.SdkInitializationListener;
 import com.mopub.mobileads.FacebookBanner;
 import com.theme.mela.sdk.helper.AudienceNetworkInitializeHelper;
-import com.startapp.sdk.adsbase.StartAppAd;
-import com.startapp.sdk.adsbase.StartAppSDK;
-import com.unity3d.ads.IUnityAdsInitializationListener;
-import com.unity3d.ads.UnityAds;
+
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -44,8 +40,6 @@ public class AdNetwork {
         private String adNetwork = "";
         private String backupAdNetwork = "";
         private String adMobAppId = "";
-        private String startappAppId = "0";
-        private String unityGameId = "";
         private String appLovinSdkKey = "";
         private String mopubBannerId = "";
         private String adColonyId = "";
@@ -81,15 +75,7 @@ public class AdNetwork {
             return this;
         }
 
-        public Initialize setStartappAppId(String startappAppId) {
-            this.startappAppId = startappAppId;
-            return this;
-        }
 
-        public Initialize setUnityGameId(String unityGameId) {
-            this.unityGameId = unityGameId;
-            return this;
-        }
 
         public Initialize setAppLovinSdkKey(String appLovinSdkKey) {
             this.appLovinSdkKey = appLovinSdkKey;
@@ -125,25 +111,7 @@ public class AdNetwork {
                         });
                         AudienceNetworkInitializeHelper.initialize(activity);
                         break;
-                    case STARTAPP:
-                        StartAppSDK.init(activity, startappAppId, false);
-                        StartAppSDK.setTestAdsEnabled(debug);
-                        StartAppAd.disableSplash();
-                        StartAppSDK.setUserConsent(activity, "pas", System.currentTimeMillis(), true);
-                        break;
-                    case UNITY:
-                        UnityAds.initialize(activity.getApplicationContext(), unityGameId, debug, new IUnityAdsInitializationListener() {
-                            @Override
-                            public void onInitializationComplete() {
-                                Log.d(TAG, "Unity Ads Initialization Complete with ID : " + unityGameId);
-                            }
 
-                            @Override
-                            public void onInitializationFailed(UnityAds.UnityAdsInitializationError error, String message) {
-                                Log.d(TAG, "Unity Ads Initialization Failed: [" + error + "] " + message);
-                            }
-                        });
-                        break;
                     case APPLOVIN:
                         AppLovinSdk.getInstance(activity).setMediationProvider(AppLovinMediationProvider.MAX);
                         AppLovinSdk.getInstance(activity).initializeSdk(config -> {
@@ -188,25 +156,7 @@ public class AdNetwork {
                         });
                         AudienceNetworkInitializeHelper.initialize(activity);
                         break;
-                    case STARTAPP:
-                        StartAppSDK.init(activity, startappAppId, false);
-                        StartAppSDK.setTestAdsEnabled(debug);
-                        StartAppAd.disableSplash();
-                        StartAppSDK.setUserConsent(activity, "pas", System.currentTimeMillis(), true);
-                        break;
-                    case UNITY:
-                        UnityAds.initialize(activity.getApplicationContext(), unityGameId, debug, new IUnityAdsInitializationListener() {
-                            @Override
-                            public void onInitializationComplete() {
-                                Log.d(TAG, "Unity Ads Initialization Complete with ID : " + unityGameId);
-                            }
 
-                            @Override
-                            public void onInitializationFailed(UnityAds.UnityAdsInitializationError error, String message) {
-                                Log.d(TAG, "Unity Ads Initialization Failed: [" + error + "] " + message);
-                            }
-                        });
-                        break;
                     case APPLOVIN:
                         AppLovinSdk.getInstance(activity).setMediationProvider(AppLovinMediationProvider.MAX);
                         AppLovinSdk.getInstance(activity).initializeSdk(config -> {

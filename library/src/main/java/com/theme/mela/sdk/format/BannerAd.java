@@ -6,10 +6,6 @@ import static com.theme.mela.sdk.util.Constant.AD_STATUS_ON;
 import static com.theme.mela.sdk.util.Constant.APPLOVIN;
 import static com.theme.mela.sdk.util.Constant.MOPUB;
 import static com.theme.mela.sdk.util.Constant.NONE;
-import static com.theme.mela.sdk.util.Constant.STARTAPP;
-import static com.theme.mela.sdk.util.Constant.UNITY;
-import static com.theme.mela.sdk.util.Constant.UNITY_ADS_BANNER_HEIGHT_MEDIUM;
-import static com.theme.mela.sdk.util.Constant.UNITY_ADS_BANNER_WIDTH_MEDIUM;
 
 import android.app.Activity;
 import android.util.Log;
@@ -37,11 +33,7 @@ import com.mopub.mobileads.MoPubErrorCode;
 import com.mopub.mobileads.MoPubView;
 import com.theme.mela.sdk.R;
 import com.theme.mela.sdk.util.Tools;
-import com.startapp.sdk.ads.banner.Banner;
-import com.startapp.sdk.ads.banner.BannerListener;
-import com.unity3d.services.banners.BannerErrorInfo;
-import com.unity3d.services.banners.BannerView;
-import com.unity3d.services.banners.UnityBannerSize;
+
 
 public class BannerAd {
 
@@ -57,7 +49,7 @@ public class BannerAd {
         private String adNetwork = "";
         private String backupAdNetwork = "";
         private String adMobBannerId = "";
-        private String unityBannerId = "";
+
         private String appLovinBannerId = "";
         private String mopubBannerId = "";
         public static String adColonyBannerId = "";
@@ -94,10 +86,7 @@ public class BannerAd {
             return this;
         }
 
-        public Builder setUnityBannerId(String unityBannerId) {
-            this.unityBannerId = unityBannerId;
-            return this;
-        }
+
 
         public Builder setAppLovinBannerId(String appLovinBannerId) {
             this.appLovinBannerId = appLovinBannerId;
@@ -176,64 +165,7 @@ public class BannerAd {
                         Log.d(TAG, adNetwork + " Banner Ad unit Id : " + adMobBannerId);
                         break;
 
-                    case STARTAPP:
-                        RelativeLayout startAppAdView = activity.findViewById(R.id.startapp_banner_view_container);
-                        Banner banner = new Banner(activity, new BannerListener() {
-                            @Override
-                            public void onReceiveAd(View banner) {
-                                startAppAdView.setVisibility(View.VISIBLE);
-                            }
 
-                            @Override
-                            public void onFailedToReceiveAd(View banner) {
-                                startAppAdView.setVisibility(View.GONE);
-                                loadBackupBannerAd();
-                                Log.d(TAG, adNetwork + " failed load startapp banner ad : ");
-                            }
-
-                            @Override
-                            public void onImpression(View view) {
-
-                            }
-
-                            @Override
-                            public void onClick(View banner) {
-                            }
-                        });
-                        startAppAdView.addView(banner);
-                        break;
-
-                    case UNITY:
-                        RelativeLayout unityAdView = activity.findViewById(R.id.unity_banner_view_container);
-                        BannerView bottomBanner = new BannerView(activity, unityBannerId, new UnityBannerSize(UNITY_ADS_BANNER_WIDTH_MEDIUM, UNITY_ADS_BANNER_HEIGHT_MEDIUM));
-                        bottomBanner.setListener(new BannerView.IListener() {
-                            @Override
-                            public void onBannerLoaded(BannerView bannerView) {
-                                unityAdView.setVisibility(View.VISIBLE);
-                                Log.d("Unity_banner", "ready");
-                            }
-
-                            @Override
-                            public void onBannerClick(BannerView bannerView) {
-
-                            }
-
-                            @Override
-                            public void onBannerFailedToLoad(BannerView bannerView, BannerErrorInfo bannerErrorInfo) {
-                                Log.d("SupportTest", "Banner Error" + bannerErrorInfo);
-                                unityAdView.setVisibility(View.GONE);
-                                loadBackupBannerAd();
-                            }
-
-                            @Override
-                            public void onBannerLeftApplication(BannerView bannerView) {
-
-                            }
-                        });
-                        unityAdView.addView(bottomBanner);
-                        bottomBanner.load();
-                        Log.d(TAG, adNetwork + " Banner Ad unit Id : " + unityBannerId);
-                        break;
 
                     case APPLOVIN:
                         RelativeLayout appLovinAdView = activity.findViewById(R.id.applovin_banner_view_container);
@@ -440,62 +372,7 @@ public class BannerAd {
                         Log.d(TAG, adNetwork + " Banner Ad unit Id : " + adMobBannerId);
                         break;
 
-                    case STARTAPP:
-                        RelativeLayout startAppAdView = activity.findViewById(R.id.startapp_banner_view_container);
-                        Banner banner = new Banner(activity, new BannerListener() {
-                            @Override
-                            public void onReceiveAd(View banner) {
-                                startAppAdView.setVisibility(View.VISIBLE);
-                            }
 
-                            @Override
-                            public void onFailedToReceiveAd(View banner) {
-                                startAppAdView.setVisibility(View.GONE);
-                                Log.d(TAG, adNetwork + " failed load startapp banner ad : ");
-                            }
-
-                            @Override
-                            public void onImpression(View view) {
-
-                            }
-
-                            @Override
-                            public void onClick(View banner) {
-                            }
-                        });
-                        startAppAdView.addView(banner);
-                        break;
-
-                    case UNITY:
-                        RelativeLayout unityAdView = activity.findViewById(R.id.unity_banner_view_container);
-                        BannerView bottomBanner = new BannerView(activity, unityBannerId, new UnityBannerSize(UNITY_ADS_BANNER_WIDTH_MEDIUM, UNITY_ADS_BANNER_HEIGHT_MEDIUM));
-                        bottomBanner.setListener(new BannerView.IListener() {
-                            @Override
-                            public void onBannerLoaded(BannerView bannerView) {
-                                unityAdView.setVisibility(View.VISIBLE);
-                                Log.d("Unity_banner", "ready");
-                            }
-
-                            @Override
-                            public void onBannerClick(BannerView bannerView) {
-
-                            }
-
-                            @Override
-                            public void onBannerFailedToLoad(BannerView bannerView, BannerErrorInfo bannerErrorInfo) {
-                                Log.d("SupportTest", "Banner Error" + bannerErrorInfo);
-                                unityAdView.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onBannerLeftApplication(BannerView bannerView) {
-
-                            }
-                        });
-                        unityAdView.addView(bottomBanner);
-                        bottomBanner.load();
-                        Log.d(TAG, adNetwork + " Banner Ad unit Id : " + unityBannerId);
-                        break;
 
                     case APPLOVIN:
                         RelativeLayout appLovinAdView = activity.findViewById(R.id.applovin_banner_view_container);
@@ -590,57 +467,57 @@ public class BannerAd {
                         Log.d(TAG, adNetwork + " Banner Ad unit Id : " + mopubBannerId);
                         break;
                     case ADCOLONY:
-                    RelativeLayout adColonyBannerContainer = activity.findViewById(R.id.mopub_banner_view_container);
-                    AdColonyAdViewListener bannerListener = new AdColonyAdViewListener() {
+                        RelativeLayout adColonyBannerContainer = activity.findViewById(R.id.mopub_banner_view_container);
+                        AdColonyAdViewListener bannerListener = new AdColonyAdViewListener() {
 
-                        @Override
-                        public void onRequestFilled(AdColonyAdView adColonyAdView) {
-                            Log.d(TAG, "onRequestFilled");
-                            if (adColonyBannerContainer.getChildCount() > 0) {
-                                adColonyBannerContainer.removeView(bannerAdColony);
-                                adColonyBannerContainer.setVisibility(View.GONE);
+                            @Override
+                            public void onRequestFilled(AdColonyAdView adColonyAdView) {
+                                Log.d(TAG, "onRequestFilled");
+                                if (adColonyBannerContainer.getChildCount() > 0) {
+                                    adColonyBannerContainer.removeView(bannerAdColony);
+                                    adColonyBannerContainer.setVisibility(View.GONE);
+                                }
+                                adColonyBannerContainer.addView(adColonyAdView);
+                                bannerAdColony = adColonyAdView;
+                                adColonyBannerContainer.setVisibility(View.VISIBLE);
                             }
-                            adColonyBannerContainer.addView(adColonyAdView);
-                            bannerAdColony = adColonyAdView;
-                            adColonyBannerContainer.setVisibility(View.VISIBLE);
-                        }
 
-                        @Override
-                        public void onRequestNotFilled(AdColonyZone zone) {
-                            super.onRequestNotFilled(zone);
-                            adColonyBannerContainer.setVisibility(View.VISIBLE);
-                            Log.d(TAG, "onRequestNotFilled");
-                        }
+                            @Override
+                            public void onRequestNotFilled(AdColonyZone zone) {
+                                super.onRequestNotFilled(zone);
+                                adColonyBannerContainer.setVisibility(View.VISIBLE);
+                                Log.d(TAG, "onRequestNotFilled");
+                            }
 
-                        @Override
-                        public void onOpened(AdColonyAdView ad) {
-                            super.onOpened(ad);
-                            Log.d(TAG, "onOpened");
-                        }
+                            @Override
+                            public void onOpened(AdColonyAdView ad) {
+                                super.onOpened(ad);
+                                Log.d(TAG, "onOpened");
+                            }
 
-                        @Override
-                        public void onClosed(AdColonyAdView ad) {
-                            super.onClosed(ad);
-                            Log.d(TAG, "onClosed");
-                        }
+                            @Override
+                            public void onClosed(AdColonyAdView ad) {
+                                super.onClosed(ad);
+                                Log.d(TAG, "onClosed");
+                            }
 
-                        @Override
-                        public void onClicked(AdColonyAdView ad) {
-                            super.onClicked(ad);
-                            Log.d(TAG, "onClicked");
-                        }
+                            @Override
+                            public void onClicked(AdColonyAdView ad) {
+                                super.onClicked(ad);
+                                Log.d(TAG, "onClicked");
+                            }
 
-                        @Override
-                        public void onLeftApplication(AdColonyAdView ad) {
-                            super.onLeftApplication(ad);
-                            Log.d(TAG, "onLeftApplication");
-                        }
-                    };
+                            @Override
+                            public void onLeftApplication(AdColonyAdView ad) {
+                                super.onLeftApplication(ad);
+                                Log.d(TAG, "onLeftApplication");
+                            }
+                        };
 
-                    AdColonyAdOptions adOptions = new AdColonyAdOptions();
-                    AdColony.requestAdView(adColonyBannerId, bannerListener, AdColonyAdSize.BANNER, adOptions);
-                    Log.d(TAG, adNetwork + " Banner Ad unit Id : " + adColonyBannerId);
-                    break;
+                        AdColonyAdOptions adOptions = new AdColonyAdOptions();
+                        AdColony.requestAdView(adColonyBannerId, bannerListener, AdColonyAdSize.BANNER, adOptions);
+                        Log.d(TAG, adNetwork + " Banner Ad unit Id : " + adColonyBannerId);
+                        break;
                 }
                 Log.d(TAG, "Banner Ad is enabled");
             } else {

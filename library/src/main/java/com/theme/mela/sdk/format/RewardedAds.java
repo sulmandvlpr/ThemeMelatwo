@@ -6,8 +6,7 @@ import static com.theme.mela.sdk.util.Constant.AD_STATUS_ON;
 import static com.theme.mela.sdk.util.Constant.APPLOVIN;
 import static com.theme.mela.sdk.util.Constant.MOPUB;
 import static com.theme.mela.sdk.util.Constant.NONE;
-import static com.theme.mela.sdk.util.Constant.STARTAPP;
-import static com.theme.mela.sdk.util.Constant.UNITY;
+
 
 import android.app.Activity;
 import android.os.Handler;
@@ -33,11 +32,8 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.mopub.mobileads.MoPubRewardedAds;
-import com.startapp.sdk.adsbase.StartAppAd;
-import com.unity3d.ads.IUnityAdsShowListener;
-import com.unity3d.ads.UnityAds;
 import com.theme.mela.sdk.util.Tools;
-import com.unity3d.ads.UnityAdsShowOptions;
+
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,7 +44,7 @@ public class RewardedAds {
         private static final String TAG = "AdNetwork";
         private final Activity activity;
         private RewardedAd mRewardedAd;
-        private StartAppAd startAppAd;
+
         private MaxRewardedAd maxRewardedAd;
         private AdColonyInterstitial rewardAdColony;
         private AdColonyInterstitialListener rewardListener;
@@ -61,7 +57,6 @@ public class RewardedAds {
         private String adNetwork = "";
         private String backupAdNetwork = "";
         private String adMobRewardedId = "";
-        private String unityRewardedId = "";
         private String appLovinRewardedId = "";
         private String mopubRewardId = "";
         public static String adColonyRewardedId = "";
@@ -104,10 +99,7 @@ public class RewardedAds {
             return this;
         }
 
-        public Builder setUnityRewardedId(String unityRewardedId) {
-            this.unityRewardedId = unityRewardedId;
-            return this;
-        }
+
 
         public Builder setAppLovinRewardedId(String appLovinRewardedId) {
             this.appLovinRewardedId = appLovinRewardedId;
@@ -144,25 +136,23 @@ public class RewardedAds {
                 switch (adNetwork) {
                     case ADMOB:
                         RewardedAd.load(activity, adMobRewardedId, Tools.getAdRequest(activity, legacyGDPR), new RewardedAdLoadCallback() {
-                                    @Override
-                                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                                        Log.d(TAG, loadAdError.getMessage());
-                                        mRewardedAd = null;
-                                        loadBackupInterstitialAd();
-                                        Log.d(TAG, "Failed load AdMob Rewarded Ad");
+                            @Override
+                            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                                Log.d(TAG, loadAdError.getMessage());
+                                mRewardedAd = null;
+                                loadBackupInterstitialAd();
+                                Log.d(TAG, "Failed load AdMob Rewarded Ad");
 
-                                    }
-                                    @Override
-                                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
-                                        mRewardedAd = rewardedAd;
-                                        Log.d(TAG, "Ad was loaded.");
-                                    }
-                                });
+                            }
+                            @Override
+                            public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                                mRewardedAd = rewardedAd;
+                                Log.d(TAG, "Ad was loaded.");
+                            }
+                        });
                         break;
 
-                    case STARTAPP:
-                        startAppAd = new StartAppAd(activity);
-                        break;
+
                     case APPLOVIN:
                         maxRewardedAd =  MaxRewardedAd.getInstance(appLovinRewardedId, activity);
                         maxRewardedAd.setListener(new MaxRewardedAdListener() {
@@ -297,9 +287,6 @@ public class RewardedAds {
                         });
                         break;
 
-                    case STARTAPP:
-                        startAppAd = new StartAppAd(activity);
-                        break;
                     case APPLOVIN:
                         maxRewardedAd =  MaxRewardedAd.getInstance(appLovinRewardedId, activity);
                         maxRewardedAd.setListener(new MaxRewardedAdListener() {
@@ -434,49 +421,16 @@ public class RewardedAds {
                             }
                             break;
 
-                        case STARTAPP:
-                            if (startAppAd != null) {
-                                startAppAd.showAd();
-                                Log.d(TAG, "startapp interstitial not null [counter] : " + counter);
-                            } else {
-                                showBackupRewardedAd();
-                                Log.d(TAG, "startapp interstitial null");
-                            }
-                            break;
 
-                        case UNITY:
-                            UnityAds.show(activity, unityRewardedId, new UnityAdsShowOptions(), new IUnityAdsShowListener() {
-                                @Override
-                                public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError error, String message) {
-                                    Log.d(TAG, "unity ads show failure");
-                                    showBackupRewardedAd();
-                                }
-
-                                @Override
-                                public void onUnityAdsShowStart(String placementId) {
-
-                                }
-
-                                @Override
-                                public void onUnityAdsShowClick(String placementId) {
-
-                                }
-
-                                @Override
-                                public void onUnityAdsShowComplete(String placementId, UnityAds.UnityAdsShowCompletionState state) {
-
-                                }
-                            });
-                            break;
 
                         case APPLOVIN:
                             if (maxRewardedAd.isReady()) {
                                 Log.d(TAG, "ready : " + counter);
-                                    maxRewardedAd.showAd();
-                                    Log.d(TAG, "show ad");
-                                } else {
+                                maxRewardedAd.showAd();
+                                Log.d(TAG, "show ad");
+                            } else {
                                 showBackupRewardedAd();
-                                }
+                            }
                             break;
 
                         case MOPUB:
@@ -508,66 +462,39 @@ public class RewardedAds {
         public void showBackupRewardedAd() {
             if (adStatus.equals(AD_STATUS_ON) && placementStatus != 0) {
                 Log.d(TAG, "Show Backup Rewarded Ad [" + backupAdNetwork.toUpperCase() + "]");
-                 switch (backupAdNetwork) {
-                        case ADMOB:
-                            if (mRewardedAd != null) {
-                                mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
-                                    @Override
-                                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                                    }
-                                });
-                            }
-                            break;
-
-                        case STARTAPP:
-                            if (startAppAd != null) {
-                                startAppAd.showAd();
-                            }
-                            break;
-
-                        case UNITY:
-                            UnityAds.show(activity, unityRewardedId, new UnityAdsShowOptions(), new IUnityAdsShowListener() {
+                switch (backupAdNetwork) {
+                    case ADMOB:
+                        if (mRewardedAd != null) {
+                            mRewardedAd.show(activity, new OnUserEarnedRewardListener() {
                                 @Override
-                                public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError error, String message) {
-                                }
-
-                                @Override
-                                public void onUnityAdsShowStart(String placementId) {
-
-                                }
-
-                                @Override
-                                public void onUnityAdsShowClick(String placementId) {
-
-                                }
-
-                                @Override
-                                public void onUnityAdsShowComplete(String placementId, UnityAds.UnityAdsShowCompletionState state) {
-
+                                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
                                 }
                             });
-                            break;
+                        }
+                        break;
 
-                        case APPLOVIN:
-                            if (maxRewardedAd.isReady()) {
-                                maxRewardedAd.showAd();
-                            }
-                            break;
 
-                        case MOPUB:
-                            MoPubRewardedAds.loadRewardedAd(mopubRewardId);
-                            MoPubRewardedAds.showRewardedAd(mopubRewardId);
-                            break;
-                        case ADCOLONY:
-                            if (rewardAdColony != null && isRewardLoaded) {
-                                rewardAdColony.show();
-                                isRewardLoaded = false;
-                            }
-                            break;
-                        case NONE:
-                            //do nothing
-                            break;
-                    }
+
+                    case APPLOVIN:
+                        if (maxRewardedAd.isReady()) {
+                            maxRewardedAd.showAd();
+                        }
+                        break;
+
+                    case MOPUB:
+                        MoPubRewardedAds.loadRewardedAd(mopubRewardId);
+                        MoPubRewardedAds.showRewardedAd(mopubRewardId);
+                        break;
+                    case ADCOLONY:
+                        if (rewardAdColony != null && isRewardLoaded) {
+                            rewardAdColony.show();
+                            isRewardLoaded = false;
+                        }
+                        break;
+                    case NONE:
+                        //do nothing
+                        break;
+                }
 
                 Log.d(TAG, "Current counter : " + counter);
             }

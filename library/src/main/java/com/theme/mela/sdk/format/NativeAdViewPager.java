@@ -4,8 +4,7 @@ import static com.theme.mela.sdk.util.Constant.ADMOB;
 import static com.theme.mela.sdk.util.Constant.AD_STATUS_ON;
 import static com.theme.mela.sdk.util.Constant.APPLOVIN;
 import static com.theme.mela.sdk.util.Constant.NONE;
-import static com.theme.mela.sdk.util.Constant.STARTAPP;
-import static com.theme.mela.sdk.util.Constant.UNITY;
+
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
@@ -36,10 +35,7 @@ import com.theme.mela.sdk.util.Constant;
 import com.theme.mela.sdk.util.NativeTemplateStyle;
 import com.theme.mela.sdk.util.TemplateView;
 import com.theme.mela.sdk.util.Tools;
-import com.startapp.sdk.ads.nativead.NativeAdDetails;
-import com.startapp.sdk.ads.nativead.NativeAdPreferences;
-import com.startapp.sdk.ads.nativead.StartAppNativeAd;
-import com.startapp.sdk.adsbase.adlisteners.AdEventListener;
+
 
 import java.util.ArrayList;
 
@@ -54,13 +50,7 @@ public class NativeAdViewPager {
         MediaView mediaView;
         TemplateView admob_native_ad;
         LinearLayout admob_native_background;
-        View startapp_native_ad;
-        ImageView startapp_native_image;
-        ImageView startapp_native_icon;
-        TextView startapp_native_title;
-        TextView startapp_native_description;
-        Button startapp_native_button;
-        LinearLayout startapp_native_background;
+
 
         FrameLayout applovin_native_ad;
         MaxNativeAdLoader nativeAdLoader;
@@ -134,14 +124,6 @@ public class NativeAdViewPager {
                 admob_native_ad = view.findViewById(R.id.admob_native_ad_container);
                 mediaView = view.findViewById(R.id.media_view);
                 admob_native_background = view.findViewById(R.id.background);
-                startapp_native_ad = view.findViewById(R.id.startapp_native_ad_container);
-                startapp_native_image = view.findViewById(R.id.startapp_native_image);
-                startapp_native_icon = activity.findViewById(R.id.startapp_native_icon);
-                startapp_native_title = view.findViewById(R.id.startapp_native_title);
-                startapp_native_description = view.findViewById(R.id.startapp_native_description);
-                startapp_native_button = view.findViewById(R.id.startapp_native_button);
-                startapp_native_button.setOnClickListener(v1 -> startapp_native_ad.performClick());
-                startapp_native_background = view.findViewById(R.id.startapp_native_background);
                 applovin_native_ad = view.findViewById(R.id.applovin_native_ad_container);
                 progress_bar_ad = view.findViewById(R.id.progress_bar_ad);
                 progress_bar_ad.setVisibility(View.VISIBLE);
@@ -181,57 +163,7 @@ public class NativeAdViewPager {
                         }
                         break;
 
-                    case STARTAPP:
-                        if (startapp_native_ad.getVisibility() != View.VISIBLE) {
-                            StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
-                            NativeAdPreferences nativePrefs = new NativeAdPreferences()
-                                    .setAdsNumber(3)
-                                    .setAutoBitmapDownload(true)
-                                    .setPrimaryImageSize(Constant.STARTAPP_IMAGE_MEDIUM);
-                            AdEventListener adListener = new AdEventListener() {
-                                @Override
-                                public void onReceiveAd(@NonNull com.startapp.sdk.adsbase.Ad arg0) {
-                                    Log.d(TAG, "StartApp Native Ad loaded");
-                                    startapp_native_ad.setVisibility(View.VISIBLE);
-                                    progress_bar_ad.setVisibility(View.GONE);
-                                    //noinspection rawtypes
-                                    ArrayList ads = startAppNativeAd.getNativeAds(); // get NativeAds list
 
-                                    // Print all ads details to log
-                                    for (Object ad : ads) {
-                                        Log.d(TAG, "StartApp Native Ad " + ad.toString());
-                                    }
-
-                                    NativeAdDetails ad = (NativeAdDetails) ads.get(0);
-                                    if (ad != null) {
-                                        startapp_native_image.setImageBitmap(ad.getImageBitmap());
-                                        startapp_native_icon.setImageBitmap(ad.getSecondaryImageBitmap());
-                                        startapp_native_title.setText(ad.getTitle());
-                                        startapp_native_description.setText(ad.getDescription());
-                                        startapp_native_button.setText(ad.isApp() ? "Install" : "Open");
-                                        ad.registerViewForInteraction(startapp_native_ad);
-                                    }
-
-                                    if (darkTheme) {
-                                        startapp_native_background.setBackgroundResource(R.color.colorBackgroundDark);
-                                    } else {
-                                        startapp_native_background.setBackgroundResource(R.color.colorBackgroundLight);
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailedToReceiveAd(com.startapp.sdk.adsbase.Ad arg0) {
-                                    loadBackupNativeAd();
-                                    Log.d(TAG, "StartApp Native Ad failed loaded");
-                                }
-                            };
-                            startAppNativeAd.loadAd(nativePrefs, adListener);
-                        } else {
-                            Log.d(TAG, "StartApp Native Ad has been loaded");
-                            progress_bar_ad.setVisibility(View.GONE);
-                        }
-                        break;
 
                     case APPLOVIN:
                         if (applovin_native_ad.getVisibility() != View.VISIBLE) {
@@ -272,9 +204,7 @@ public class NativeAdViewPager {
                         }
                         break;
 
-                    case UNITY:
-                        //do nothing
-                        break;
+
 
                 }
 
@@ -289,14 +219,7 @@ public class NativeAdViewPager {
                 admob_native_ad = view.findViewById(R.id.admob_native_ad_container);
                 mediaView = view.findViewById(R.id.media_view);
                 admob_native_background = view.findViewById(R.id.background);
-                startapp_native_ad = view.findViewById(R.id.startapp_native_ad_container);
-                startapp_native_image = view.findViewById(R.id.startapp_native_image);
-                startapp_native_icon = activity.findViewById(R.id.startapp_native_icon);
-                startapp_native_title = view.findViewById(R.id.startapp_native_title);
-                startapp_native_description = view.findViewById(R.id.startapp_native_description);
-                startapp_native_button = view.findViewById(R.id.startapp_native_button);
-                startapp_native_button.setOnClickListener(v1 -> startapp_native_ad.performClick());
-                startapp_native_background = view.findViewById(R.id.startapp_native_background);
+
                 progress_bar_ad = view.findViewById(R.id.progress_bar_ad);
                 progress_bar_ad.setVisibility(View.VISIBLE);
 
@@ -336,58 +259,7 @@ public class NativeAdViewPager {
                         }
                         break;
 
-                    case STARTAPP:
-                        if (startapp_native_ad.getVisibility() != View.VISIBLE) {
-                            StartAppNativeAd startAppNativeAd = new StartAppNativeAd(activity);
-                            NativeAdPreferences nativePrefs = new NativeAdPreferences()
-                                    .setAdsNumber(3)
-                                    .setAutoBitmapDownload(true)
-                                    .setPrimaryImageSize(Constant.STARTAPP_IMAGE_MEDIUM);
-                            AdEventListener adListener = new AdEventListener() {
-                                @Override
-                                public void onReceiveAd(@NonNull com.startapp.sdk.adsbase.Ad arg0) {
-                                    Log.d(TAG, "StartApp Native Ad loaded");
-                                    startapp_native_ad.setVisibility(View.VISIBLE);
-                                    progress_bar_ad.setVisibility(View.GONE);
-                                    //noinspection rawtypes
-                                    ArrayList ads = startAppNativeAd.getNativeAds(); // get NativeAds list
 
-                                    // Print all ads details to log
-                                    for (Object ad : ads) {
-                                        Log.d(TAG, "StartApp Native Ad " + ad.toString());
-                                    }
-
-                                    NativeAdDetails ad = (NativeAdDetails) ads.get(0);
-                                    if (ad != null) {
-                                        startapp_native_image.setImageBitmap(ad.getImageBitmap());
-                                        startapp_native_icon.setImageBitmap(ad.getSecondaryImageBitmap());
-                                        startapp_native_title.setText(ad.getTitle());
-                                        startapp_native_description.setText(ad.getDescription());
-                                        startapp_native_button.setText(ad.isApp() ? "Install" : "Open");
-                                        ad.registerViewForInteraction(startapp_native_ad);
-                                    }
-
-                                    if (darkTheme) {
-                                        startapp_native_background.setBackgroundResource(R.color.colorBackgroundDark);
-                                    } else {
-                                        startapp_native_background.setBackgroundResource(R.color.colorBackgroundLight);
-                                    }
-
-                                }
-
-                                @Override
-                                public void onFailedToReceiveAd(com.startapp.sdk.adsbase.Ad arg0) {
-                                    startapp_native_ad.setVisibility(View.GONE);
-                                    progress_bar_ad.setVisibility(View.GONE);
-                                    Log.d(TAG, "StartApp Native Ad failed loaded");
-                                }
-                            };
-                            startAppNativeAd.loadAd(nativePrefs, adListener);
-                        } else {
-                            Log.d(TAG, "StartApp Native Ad has been loaded");
-                            progress_bar_ad.setVisibility(View.GONE);
-                        }
-                        break;
 
                     case APPLOVIN:
                         if (applovin_native_ad.getVisibility() != View.VISIBLE) {
@@ -427,7 +299,7 @@ public class NativeAdViewPager {
                         }
                         break;
 
-                    case UNITY:
+
 
                     case NONE:
                         //do nothing
